@@ -39,7 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     const avatarLocalpath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
     if (!avatarLocalpath) {
         throw new apiError(400, "Avatar is required")
@@ -62,13 +62,17 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
 
-    const createdUser = await User.findById(user._id).select(
-        "-password - refreshtoken"
-    )
+    // const createdUser = await User.findById(user._id).select(
+    //     "-password -refreshToken"
+    // )
+    const createdUser = await User.findById(user._id);
 
 
 
-    if (!createdUser) {
+
+    if (createdUser) {
+        delete user.password;
+    } else {
         throw new apiError(500, "User not created")
     }
 
